@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.cmfz.dao.ManagerDAO">
+
+    <resultMap id="managerMap" type="manager">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="passWord" column="passWord"/>
+        <result property="solt" column="solt"/>
+        <collection property="roles" ofType="role">
+            <id property="id" column="id"/>
+            <result property="name" column="name"/>
+        </collection>
+
+        <collection property="premissions" ofType="premission">
+            <id property="id" column="id"/>
+            <result property="name" column="name"/>
+        </collection>
+    </resultMap>
+
+    <!--查单个===用户名密码登陆-->
+    <select id="findByName" resultType="Manager" parameterType="String">
+        select id,name,password,phone,createDate from t_manager where name=#{name}
+    </select>
+
+    <!-- 查询用户角色 -->
+    <select id="findRolesByName" parameterType="String" resultType="role">
+          select id,name
+          from t_role
+          where
+          id=(select mr.roleId
+              from t_manager m
+              LEFT JOIN t_manager_role mr
+              on m.id= mr.managerId
+              where name=#{name})
+    </select>
+
+    <!-- 查询用户权限 -->
+    <select id="findPremissionByRole" parameterType="String" resultType="premission">
+         select id,name from t_premission p where p.id in
+        (select rp.premissionId from t_role_premission rp LEFT JOIN t_role r on rp.roleId=r.id
+        where rp.roleId=(select id from t_role  where
+        id=(select mr.roleId from t_manager m LEFT JOIN t_manager_role mr on m.id= mr.managerId where name=#{name})))
+    </select>
+
+
+
+</mapper>

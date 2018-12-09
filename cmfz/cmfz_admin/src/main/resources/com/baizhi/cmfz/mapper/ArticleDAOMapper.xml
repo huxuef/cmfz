@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.cmfz.dao.ArticleDAO">
+
+    <resultMap id="myArticle" type="Article">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="imgUrl" property="imgUrl"/>
+        <result column="status" property="status"/>
+        <result column="content" property="content"/>
+        <result column="category" property="category"/>
+        <result column="createDate" property="createDate"/>
+        <association property="master" javaType="Master">
+            <id column="id" property="id"/>
+            <result column="name" property="name"/>
+            <result column="imgUrl" property="imgUrl"/>
+            <result column="status" property="status"/>
+        </association>
+    </resultMap>
+    <!--查所有文章-->
+    <select id="findAll" resultMap="myArticle">
+        select a.*,m.id,m.name,m.imgUrl,m.status
+        from t_article a join t_master m on a.author=m.id
+    </select>
+
+    <!--创建文章-->
+    <insert id="insert" parameterType="Article">
+        insert into t_article values(#{id},#{title},#{imgUrl,jdbcType=VARCHAR},#{status},#{master.name},
+        #{content},#{category},#{createDate})
+    </insert>
+
+    <!--查单个-->
+    <select id="findById" parameterType="String" resultType="Article">
+        select id,content from t_article where id=#{id}
+    </select>
+
+    <!--修改文章内容-->
+    <update id="update" parameterType="Article">
+        update t_article set content=#{content} where id=#{id}
+    </update>
+
+
+
+
+</mapper>

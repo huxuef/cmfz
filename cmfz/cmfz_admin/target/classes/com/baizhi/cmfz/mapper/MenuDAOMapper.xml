@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.cmfz.dao.MenuDAO">
+
+    <resultMap id="MyMenu" type="Menu">
+        <id column="id" property="id" />
+        <result column="name" property="name"/>
+        <result column="parent_id" property="p_id"/>
+        <result column="level" property="level"/>
+        <result column="icon" property="icon"/>
+        <collection property="childMenu" ofType="Menu">
+            <id column="mid" property="id"/>
+            <result column="mname" property="name"/>
+            <result column="mpid" property="p_id"/>
+            <result column="mlevel" property="level"/>
+            <result column="micon" property="icon"/>
+            <result column="mhref" property="href"/>
+        </collection>
+    </resultMap>
+
+    <!--查所有菜单-->
+    <select id="findAll" resultMap="MyMenu">
+        select m1.id,m1.name,m1.parent_id,m1.level,m1.icon,
+               m2.id mid,m2.name mname,m2.parent_id mpid,m2.level mlevel,m2.icon micon,m2.href mhref
+        from t_menu m1 join t_menu m2 on m1.id=m2.parent_id
+        where m1.level=0
+    </select>
+
+
+
+</mapper>

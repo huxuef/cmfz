@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.cmfz.dao.UserDAO">
+
+    <!--查所有-->
+    <select id="findAll" resultType="User">
+        select id,name,nickName,password,salt,phone,sex,signature,img,
+        status,location,createDate
+        from t_user
+    </select>
+
+    <!--增-->
+    <insert id="insert" parameterType="User">
+        insert into t_user values(#{id},#{name},#{nickName},#{password},#{salt},
+        #{phone},#{sex},#{signature},#{img},#{status},#{location},#{createDate},#{lastLogin})
+    </insert>
+
+    <!--查需要的字段-->
+    <select id="findCondition" resultType="User" parameterType="String">
+        select ${queryCondition} from t_user
+    </select>
+
+    <!--查最后登录时间-->
+    <select id="findCount" resultType="Integer" parameterType="Integer">
+        <![CDATA[
+        select count(id) from t_user where datediff(now(), lastLogin) <=#{days}
+        ]]>
+    </select>
+
+    <!--查各个地区的人数-->
+    <select id="findLocationCount" parameterType="String" resultType="UserLocation">
+        SELECT location name, SUM(sex = #{sex}) value FROM t_user
+        GROUP BY location
+    </select>
+
+
+</mapper>

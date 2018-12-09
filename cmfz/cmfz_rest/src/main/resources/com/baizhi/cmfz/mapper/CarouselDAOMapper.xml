@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.cmfz.dao.CarouselDAO">
+
+    <!--查单个-->
+    <select id="findById" resultType="Carousel" parameterType="String">
+        select id,name,imgurl imgUrl,createDate,status
+        from t_carousel
+        where id=#{id}
+    </select>
+
+    <!--查所有-->
+    <select id="findAll" resultType="Carousel">
+        select id,name,imgurl imgUrl,createDate,status
+        from t_carousel
+    </select>
+    <!--分页查询-->
+    <select id="findBySplit" resultType="Carousel">
+        select id,name,imgurl imgUrl,createDate,status
+        from t_carousel limit #{start},#{rows}
+    </select>
+
+    <!--查询总条数-->
+    <select id="findTotle" resultType="Long">
+        select count(id) from t_carousel
+    </select>
+
+    <!--增-->
+    <insert id="insert" parameterType="Carousel">
+        insert into t_carousel values(#{id},#{name},#{imgUrl},#{createDate},#{status})
+    </insert>
+
+    <!--修改-->
+    <update id="update" parameterType="Carousel">
+        update t_carousel set name=#{name},status=#{status} where id=#{id}
+    </update>
+
+
+
+</mapper>
